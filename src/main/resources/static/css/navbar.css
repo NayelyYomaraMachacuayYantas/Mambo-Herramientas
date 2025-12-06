@@ -1,0 +1,22 @@
+/* Navbar */
+.navbar-custom {
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-custom span {
+  font-size: 0.9rem;
+}
+
+.perfil {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.exit {
+  width: 22px;
+  height: 22px;
+}

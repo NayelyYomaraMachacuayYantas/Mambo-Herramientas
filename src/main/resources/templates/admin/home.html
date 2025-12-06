@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Estilos que comparten todo-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+    <!--Estilos del titulo-->
+    <title>Document</title>
+  </head>
+
+  <!----------------------------CONTENIDO-------------------------------------------------------------------------->
+  <body>
+    <!--Insertamos el sidebar-->
+    <th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+    <!--La parte interior de la pagina-->
+    <div class="main-content">
+      <!--Insertamos el navbar-->
+      <th:block th:replace="fragments/navbar :: navbar"></th:block>
+      <!--Contenido de la pagina-->
+      <main class="">
+        <!------------------------------------------------------------------>
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row mb-4">
+              <div class="col-12">
+                <h1 class="mb-3">
+                  <i class="bi bi-speedometer2 text-primary"></i>
+                  Dashboard - Panel de Control
+                </h1>
+                <p class="text-muted">
+                  Resumen general del sistema de facturación Mambo
+                </p>
+              </div>
+            </div>
+
+            <!-- Tarjetas de estadísticas -->
+            <div class="row mb-4">
+              <div sec:authorize="hasRole('ADMIN')" class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-primary text-white">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="card-title">Ventas del Día</h6>
+                        <h3
+                          class="mb-0"
+                          th:text="${ventasDelDia} ?: 'S/ 2,450.00'"
+                        >
+                          S/ 2,450.00
+                        </h3>
+                      </div>
+                      <div class="align-self-center">
+                        <i class="bi bi-currency-dollar fs-1"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-success text-white">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="card-title">Clientes Activos</h6>
+                        <h3 class="mb-0" th:text="${cantClientes} ?: '0'">
+                          127
+                        </h3>
+                      </div>
+                      <div class="align-self-center">
+                        <i class="bi bi-people fs-1"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-warning text-white">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="card-title">Productos en Stock</h6>
+                        <h3 class="mb-0" th:text="${cantProductos} ?: '0'">
+                          89
+                        </h3>
+                      </div>
+                      <div class="align-self-center">
+                        <i class="bi bi-box fs-1"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div sec:authorize="hasRole('ADMIN')" class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-info text-white">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="card-title">Ventas del Mes</h6>
+                        <h3
+                          class="mb-0"
+                          th:text="${ventasDelMes} ?: 'S/ 15,670.00'"
+                        >
+                          S/ 15,670.00
+                        </h3>
+                      </div>
+                      <div class="align-self-center">
+                        <i class="bi bi-graph-up fs-1"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accesos rápidos -->
+            <div class="row mb-4">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <i class="bi bi-lightning me-2"></i>
+                      Accesos Rápidos
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <a
+                          th:href="@{/admin/clientes}"
+                          class="btn btn-outline-primary w-100 h-100 d-flex flex-column justify-content-center"
+                          style="min-height: 120px"
+                        >
+                          <i class="bi bi-people fs-1 mb-2"></i>
+                          <span>Gestionar Clientes</span>
+                        </a>
+                      </div>
+                      <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <a
+                          th:href="@{/admin/productos}"
+                          class="btn btn-outline-success w-100 h-100 d-flex flex-column justify-content-center"
+                          style="min-height: 120px"
+                        >
+                          <i class="bi bi-box fs-1 mb-2"></i>
+                          <span>Ver Productos</span>
+                        </a>
+                      </div>
+                      <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <a
+                          th:href="@{/admin/boleta}"
+                          class="btn btn-outline-warning w-100 h-100 d-flex flex-column justify-content-center"
+                          style="min-height: 120px"
+                        >
+                          <i class="bi bi-receipt fs-1 mb-2"></i>
+                          <span>Nueva Boleta</span>
+                        </a>
+                      </div>
+                      <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <a
+                          th:href="@{/admin/factura}"
+                          class="btn btn-outline-info w-100 h-100 d-flex flex-column justify-content-center"
+                          style="min-height: 120px"
+                        >
+                          <i class="bi bi-file-earmark-text fs-1 mb-2"></i>
+                          <span>Nueva Factura</span>
+                        </a>
+                      </div>
+                      <div sec:authorize="hasRole('ADMIN')" class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <a
+                          th:href="@{/admin/vendedores}"
+                          class="btn btn-outline-dark w-100 h-100 d-flex flex-column justify-content-center"
+                          style="min-height: 120px"
+                        >
+                          <i class="bi bi-person-badge fs-1 mb-2"></i>
+                          <span>Ver Vendedores</span>
+                        </a>
+                      </div>
+                      <div sec:authorize="hasRole('ADMIN')" class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <a
+                          th:href="@{/admin/reporte}"
+                          class="btn btn-outline-danger w-100 h-100 d-flex flex-column justify-content-center"
+                          style="min-height: 120px"
+                        >
+                          <i class="bi bi-graph-up fs-1 mb-2"></i>
+                          <span>Ver Reportes</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actividad reciente -->
+            <div class="row">
+              <div class="col-md-8">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <i class="bi bi-clock-history me-2"></i>
+                      Actividad Reciente
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="timeline">
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                          <h6 class="timeline-title">
+                            Factura #001234 generada
+                          </h6>
+                          <p class="timeline-description text-muted mb-1">
+                            Cliente: Juan Pérez - Monto: S/ 450.00
+                          </p>
+                          <small class="text-muted">Hace 15 minutos</small>
+                        </div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-primary"></div>
+                        <div class="timeline-content">
+                          <h6 class="timeline-title">
+                            Nuevo cliente registrado
+                          </h6>
+                          <p class="timeline-description text-muted mb-1">
+                            María González - RUC: 20123456789
+                          </p>
+                          <small class="text-muted">Hace 1 hora</small>
+                        </div>
+                      </div>
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-warning"></div>
+                        <div class="timeline-content">
+                          <h6 class="timeline-title">
+                            Stock bajo en productos
+                          </h6>
+                          <p class="timeline-description text-muted mb-1">
+                            5 productos requieren reposición
+                          </p>
+                          <small class="text-muted">Hace 2 horas</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <i class="bi bi-exclamation-triangle me-2"></i>
+                      Alertas
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                      <i class="bi bi-exclamation-triangle me-2"></i>
+                      <strong>Stock Bajo:</strong> 5 productos necesitan
+                      reposición.
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                      <i class="bi bi-info-circle me-2"></i>
+                      <strong>Recordatorio:</strong> Generar reporte mensual.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!------------------------------------------------------------------>
+      </main>
+    </div>
+
+    <!-- JS globales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/fechaActualHeader.js}"></script>
+    <script>
+      // Llama a la función
+      fechaActual();
+      setInterval(fechaActual, 1000);
+    </script>
+  </body>
+</html>

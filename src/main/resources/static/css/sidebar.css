@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Istok Web", sans-serif;
+}
+
+/*--- Tamaño del navegador*/
+.sidebar {
+  width: 230px;
+  height: 100vh;
+  background-color: #0d0123;
+  color: white;
+  padding: 20px 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+/*--- Estilo de las listas*/
+.navegador ul,
+.offcanvas-body {
+  list-style: none;
+  text-decoration: none;
+  margin: 0;
+}
+
+/*--nombre de las listas y sus imagenes*/
+.sidebar .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 25px;
+  border-bottom: 1px solid #330a4f;
+  transition: background 0.3s;
+}
+
+.sidebar .nav-item a {
+  text-decoration: none;
+  color: white;
+  flex-grow: 1;
+}
+
+/*--- tamaño de los iconos*/
+.icon-image {
+  display: flex;
+  width: 25px;
+  height: 25px;
+  color: white;
+}
+.logo {
+  display: flex;
+  width: 130px;
+}
+
+/*animaciones*/
+.nav-item:hover {
+  background-color: red;
+  cursor: pointer;
+}
+
+/*Contenido del main-----------*/
+.main-content {
+  margin-left: 230px; /* espacio para sidebar */
+  width: calc(100% - 230px);
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+/* Contenido */
+main {
+  padding: 20px;
+}
+
+.offcanvas-medio {
+  width: 50% !important;
+  background-color: #0d0123;
+  color: white;
+}
+/*PANTALLAS PEQUEÑAS*/
+@media (max-width: 576px) {
+  .main-content {
+    margin-left: 0px;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+  }
+  .sidebar {
+    height: 60px;
+    width: 1px;
+  }
+  .offcanvas-body .nav-item {
+    display: flex;
+    gap: 5px;
+    padding: 12px 5px;
+    border-bottom: 1px solid #330a4f;
+  }
+}
+.nabvar-fluid {
+  display: flex;
+  padding-left: 20px;
+  gap: 20px;
+  align-items: center;
+  background-color: #0d0123;
+  font-size: 20px;
+  color: white;
+  height: 60px;
+}

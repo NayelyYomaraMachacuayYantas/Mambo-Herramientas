@@ -1,0 +1,98 @@
+<th:block th:fragment="sidebar">
+  
+<div class="sidebar d-md-block d-none d-flex flex-column">
+    <h4 class="d-flex align-items-center ps-4 pb-2 gap-1">
+      <img th:src="@{/img/icon-list.png}" class="icon-image d-none d-lg-block" alt="" />
+      <span>M A M B O</span>
+
+    </h4>
+    <!--Listado del navegador-->
+    <ul class="m-0 p-0  d-md-block d-none">
+      <li class="nav-item">
+        <img th:src="@{/img/icon-house.png}" class="icon-image" alt="" />
+        <a th:href="@{/admin/home}" class="nav-link">Home</a>
+        <hr class="m-0" />
+      </li>
+      <li class="nav-item">
+        <img th:src="@{/img/icon-listaVendedor.png}" class="icon-image" alt="" />
+        <a th:href=@{/lista/clientes} class="nav-link">Lista de clientes</a>
+      </li>
+      <li sec:authorize="hasRole('ADMIN')" class="nav-item">
+        <img th:src="@{/img/icon-vendedor.png}" class="icon-image" alt="" />
+        <a th:href=@{/admin/vendedores} class="nav-link"> Vendedores</a>
+      </li>
+      <li class="nav-item">
+        <img th:src="@{/img/icon-producto.png}" class="icon-image" alt="" />
+        <a th:href=@{/admin/productos} class="nav-link">Productos</a>
+      </li>
+      <!--
+      <li class="nav-item">
+        <img th:src="@{/img/icon-boleta.png}" class="icon-image" alt="" />
+        <a th:href=@{/admin/boleta} class="nav-link">Boleta</a>
+      </li>
+      <li class="nav-item">
+        <img th:src="@{/img/icon-boleta.png}" class="icon-image" alt="" />
+        <a th:href=@{/admin/factura} class="nav-link">Factura</a>
+      </li>
+      <li sec:authorize="hasRole('ADMIN')" class="nav-item">
+        <img th:src="@{/img/icon-reporte.png}" class="icon-image" alt="" />
+        <a th:href=@{/admin/reporte} class="nav-link">Reporte</a>
+      </li>
+      -->
+    </ul>
+
+    
+  </div>
+  <!----Pantallas pequeñas------->
+<div class="d-flex nabvar-fluid d-block d-md-none"style="">
+      <!-- Botón hamburguesa visible solo en mobile -->
+      <button class="navbar-toggler border-0 bg-transparent" style="margin-left: 0 !important;"
+        type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+        <i class="bi bi-list"></i>
+      </button>
+      <span>M A M B O</span>
+    
+    <!-- Offcanvas para mobile -->
+    <div class="offcanvas offcanvas-start offcanvas-medio" tabindex="-1" id="sidebarMenu"
+      aria-labelledby="sidebarMenuLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="sidebarMenuLabel">Secciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="m-0 p-0">
+          <li class="nav-item">
+            <img th:src="@{/img/icon-house.png}" class="icon-image" alt="" />
+            <a th:href="@{/admin/home}" class="nav-link">Home</a>
+            <hr class="m-0" />
+          </li>
+          <li class="nav-item">
+            <img th:src="@{/img/icon-listaVendedor.png}" class="icon-image" alt="" />
+            <a th:href=@{/admin/clientes} class="nav-link">Clientes</a>
+          </li>
+          <li sec:authorize="hasRole('ADMIN')" class="nav-item">
+            <img th:src="@{/img/icon-vendedor.png}" class="icon-image" alt="" />
+            <a th:href=@{/admin/vendedores} class="nav-link"> Vendedores</a>
+          </li>
+          <li class="nav-item">
+            <img th:src="@{/img/icon-producto.png}" class="icon-image" alt="" />
+            <a th:href=@{/admin/productos} class="nav-link">Productos</a>
+          </li>
+          <li class="nav-item">
+            <img th:src="@{/img/icon-boleta.png}" class="icon-image" alt="" />
+            <a th:href=@{/admin/boleta} class="nav-link">Boleta</a>
+          </li>
+          <li class="nav-item">
+            <img th:src="@{/img/icon-boleta.png}" class="icon-image" alt="" />
+            <a th:href=@{/admin/factura} class="nav-link">Factura</a>
+          </li>
+          <li sec:authorize="hasRole('ADMIN')" class="nav-item">
+            <img th:src="@{/img/icon-reporte.png}" class="icon-image" alt="" />
+            <a th:href=@{/admin/reporte} class="nav-link">Reporte</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div> 
+
+</th:block>

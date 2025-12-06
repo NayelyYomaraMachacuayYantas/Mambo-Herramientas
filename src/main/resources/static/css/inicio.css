@@ -1,0 +1,438 @@
+    /*
+        ========================================
+        VARIABLES Y ESTILOS GLOBALES
+        ========================================
+        */
+        :root {
+            --bg: #000000;
+            --panel: #000000;
+            --muted: #9aa0a6;
+            --accent: #f5c518; /* Dorado/Amarillo */
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            --dark-card: rgba(245, 197, 24, 0.04); /* Fondo sutil para M/V */
+        }
+
+        html,
+        body {
+            height: 100%;
+            scroll-behavior: smooth; /* Para un scroll suave entre secciones */
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, #050506 0%, #0b0b0d 100%);
+            color: var(--white);
+            font-family: 'Alexandria', sans-serif; /* Puedes usar Poppins si prefieres */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden; /* Evita desbordamiento horizontal */
+        }
+
+        .site-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem; /* Ajuste para los lados */
+        }
+
+        /*
+        ========================================
+        NAVBAR
+        ========================================
+        */
+       /* ---------- NAVBAR ---------- */
+    .navbar {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.02));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding-bottom: .3rem;
+    }
+
+    .navbar-brand {
+      color: var(--accent);
+      font-weight: 900;
+      letter-spacing: 1px;
+      font-size: 1.25rem;
+    }
+
+    .nav-link {
+      color: var(--muted) !important;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: .85rem;
+    }
+
+    .nav-link:hover {
+      color: var(--accent) !important;
+    }
+
+    .btn-outline-accent {
+      color: var(--accent);
+      border-color: rgba(245, 197, 24, 0.22);
+      background: transparent;
+      font-weight: 700;
+    }
+
+    .btn-outline-accent:hover {
+      background: var(--accent);
+      color: #050506;
+    }
+    .btn-dark {
+  border: 1px solid rgba(245, 197, 24, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-dark:hover {
+  background-color: rgba(245, 197, 24, 0.1);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.badge-accent {
+  background-color: var(--accent);
+  color: #000;
+  font-weight: bold;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.4rem;
+}
+
+
+        /*
+        ========================================
+        HERO SECTION (COMO LA IMAGEN ORIGINAL)
+        ========================================
+        */
+        .hero-section {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 90vh; /* Ocupa casi toda la pantalla */
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+            overflow: hidden; /* Para que la imagen del fondo no se desborde */
+        }
+
+        .hero-background-model {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60%; /* Ajusta el ancho según la imagen original */
+            height: 100%;
+            background-image: url('img/fondoInicio.jpg'); /* URL de la imagen del modelo con fondo abstracto */
+            background-size: cover;
+            background-position: center right;
+            z-index: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, #050506 40%, rgba(5, 5, 6, 0.8) 60%, rgba(5, 5, 6, 0.2) 80%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 500px; /* Limita el ancho del texto */
+            padding-left: 1rem;
+        }
+
+        .hero-title {
+            font-family: 'Poppins', sans-serif; /* Fuente más gruesa para "MAMBO" */
+            font-size: 6rem; /* Ajusta el tamaño de la fuente */
+            font-weight: 900;
+            line-height: 0.9;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            max-width: 450px;
+        }
+
+        .hero-cta-button {
+            background-color: transparent;
+            color: var(--white);
+            border: 3px solid var(--white);
+            border-radius: 5px; /* Ligeramente redondeado */
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all .2s ease-in-out;
+            text-transform: uppercase;
+            text-decoration: none; /* Asegura que no tenga subrayado */
+        }
+
+        .hero-cta-button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background-color: rgba(245, 197, 24, 0.05); /* Un ligero hover */
+        }
+
+        /* Media queries para responsividad del Hero */
+        @media (max-width: 992px) {
+            .hero-background-model {
+                width: 100%;
+                background-position: center bottom; /* Ajusta la imagen para pantallas más pequeñas */
+                opacity: 0.4; /* Menos prominente en móvil */
+            }
+            .hero-overlay {
+                background: linear-gradient(to top, #050506 30%, rgba(5, 5, 6, 0.7) 60%, rgba(5, 5, 6, 0.4) 80%, transparent 100%);
+            }
+            .hero-content {
+                text-align: center;
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+            .hero-title {
+                font-size: 4rem;
+                margin-top: 2rem;
+            }
+            .hero-subtitle {
+                font-size: 2rem;
+            }
+            .hero-section {
+                min-height: 80vh;
+                justify-content: center; /* Centra el contenido en vertical */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+            .hero-cta-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+            .nav-link {
+                font-size: .8rem;
+                margin: 0 0.4rem;
+            }
+             .navbar-brand {
+                font-size: 1.2rem;
+             }
+        }
+
+        /*
+        ========================================
+        SECCIÓN NOSOTROS (MISIÓN, VISIÓN, VALORES)
+        ========================================
+        */
+        .about-section {
+            padding: 5rem 0; /* Más padding para separar secciones */
+            background: linear-gradient(180deg, #0b0b0d 0%, #151518 100%); /* Fondo ligeramente diferente */
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .heading {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .mv-card {
+            background-color: var(--dark-card);
+            border: 1px solid rgba(245, 197, 24, 0.1);
+            border-radius: 14px;
+            padding: 2.5rem;
+            transition: all .2s ease-in-out;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .mv-card:hover {
+            background-color: rgba(245, 197, 24, 0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .mv-card i {
+            color: var(--accent);
+            font-size: 3rem; /* Iconos más grandes */
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .mv-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            color: var(--white);
+            font-size: 2rem; /* Títulos de M/V más grandes */
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mv-card p {
+            font-size: 1rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .values-grid {
+            margin-top: 5rem; /* Más espacio sobre los valores */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .value-item {
+            background: var(--glass);
+            padding: 1.8rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent); /* Borde más pronunciado */
+            transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+        }
+
+        .value-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .value-item h6 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--accent);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .value-item p {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .heading {
+                font-size: 2.5rem;
+            }
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            .mv-card h3 {
+                font-size: 1.5rem;
+            }
+            .mv-card i {
+                font-size: 2.2rem;
+            }
+            .about-section {
+                padding: 3rem 0;
+            }
+        }
+
+        /*
+        ========================================
+        FOOTER
+        ========================================
+        */
+        footer {
+            margin-top: 2.25rem;
+            padding: 3rem 0; /* Más padding */
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--muted);
+            background: #050506;
+        }
+
+        footer h6 {
+            color: var(--white); /* Títulos de footer en blanco */
+            font-weight: 900;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        footer p {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        footer a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color .2s;
+        }
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        /* small niceties */
+        .muted {
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+        /*
+        ========================================
+        MODAL Y OFFCANVAS (Estilos para que luzcan bien)
+        ========================================
+        */
+        .offcanvas {
+            background: linear-gradient(180deg, #0a0a0b, #1a1a1c); /* Un gradiente oscuro para el offcanvas */
+            color: var(--white);
+            border-left: 2px solid rgba(245, 197, 24, 0.25); /* Borde acentuado */
+        }
+        .offcanvas .offcanvas-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .modal-content {
+            background: linear-gradient(180deg, #0a0a0b, #1a1a1c);
+            color: var(--white);
+            border: 1px solid rgba(245, 197, 24, 0.1);
+        }
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .modal-title {
+            color: var(--accent);
+        }
+        .form-control {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        .form-control:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 0.25rem rgba(245, 197, 24, 0.2) !important;
+        }

@@ -1,0 +1,23 @@
+<div th:fragment="navbar">
+  <!--Barra de navegacion superior-->
+      <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid justify-content-between">
+          <!--Area del administrador o usuario y su nombre-->
+          <div class="d-flex row">
+            <span sec:authentication="name" class="fw-bold"></span>
+            <span>Isabel Lopez</span>
+          </div>
+
+          <!--Colocar fecha actual-->
+          <div class="d-flex gap-3 align-content-center justify-content-center">
+            <span class="d-none d-lg-block" id="fecha-actual"></span>
+            <img src="/img/icon-perfil.png" class="perfil" />
+            <button class="btn btn-outline-light" type="submit" onclick="document.getElementById('logoutForm').submit();">
+              <img src="/img/icon-exit.png" class="exit" alt="" />
+            </button>
+            <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;"></form>
+          </div>
+        </div>
+      </nav>
+</div>
+

@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.bg-image {
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg7Vg0j6Lh_fJO62929c522KHZDG2ZT_TYx8WPUZqPxxQ71R97C_qn_7ULp2_AfGQYl1M&usqp=CAU');
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    width: 100%;
+    z-index: -1;
+}
+
+.login-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.login-form {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 50px 40px;
+    border-radius: 25px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.25);
+    min-width: 400px;
+    color:#0D0123;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+.login-title {
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #0D0123;
+    font-size: 2rem;
+}
+
+button.btn-primary {
+    background-color: #0D0123 !important;
+    border-color: #0D0123 !important;
+    font-size:1.1rem;
+    font-weight:600;
+    padding: 12px 0;
+}
+
+button.btn-primary:hover {
+    background-color: #080819 !important;
+    border-color: #080819 !important;
+}
+#buscador {
+  min-width: 250px;
+}
+
+#filtroStock {
+  border-color: #198754;
+  color: #198754;
+  font-weight: 500;
+}
+
+#filtroStock:focus {
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}

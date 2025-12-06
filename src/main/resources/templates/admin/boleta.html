@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Estilos que comparten todo-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/css/boleta.css}" />
+    <!--Estilos del titulo-->
+    <title>Generar boleta - MAMBO</title>
+  </head>
+
+  <!----------------------------CONTENIDO-------------------------------------------------------------------------->
+  <body>
+    <!--Insertamos el sidebar-->
+    <th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+    <!--La parte interior de la pagina-->
+    <div class="main-content">
+      <!--Insertamos el navbar-->
+      <th:block th:replace="fragments/navbar :: navbar"></th:block>
+      <!--Contenido de la pagina-->
+      <main class="">
+
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h1 class="mb-2">
+                <i class="bi bi-receipt text-warning"></i>
+                Generar Boleta
+              </h1>
+              <p class="text-muted">Crear nueva boleta de venta</p>
+            </div>
+            <button class="btn btn-outline-secondary" onclick="limpiarFormulario()">
+              <i class="bi bi-arrow-clockwise me-2"></i>Limpiar Formulario
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Formulario de boleta -->
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-file-earmark me-2"></i>
+                Nueva Boleta
+              </h5>
+            </div>
+            <div class="card-body">
+              <!-- Información del cliente -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h6 class="text-primary border-bottom pb-2">Información del Cliente</h6>
+                </div>
+                <div class="col-md-4">
+                  <label for="tipoDocCliente" class="form-label">Tipo Documento</label>
+                  <select class="form-select" id="tipoDocCliente">
+                    <option value="dni">DNI</option>
+                    <option value="ruc">RUC</option>
+                    <option value="carnet">Carnet Extranjería</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="numDocCliente" class="form-label">Número Documento</label>
+                  <input type="text" class="form-control" id="numDocCliente" placeholder="Ingrese número">
+                </div>
+                <div class="col-md-4">
+                  <label for="nombreCliente" class="form-label">Nombre/Razón Social</label>
+                  <input type="text" class="form-control" id="nombreCliente" placeholder="Nombre del cliente">
+                </div>
+              </div>
+
+              <!-- Agregar productos -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h6 class="text-primary border-bottom pb-2">Productos</h6>
+                </div>
+                <div class="col-md-4">
+                  <label for="codigoProducto" class="form-label">Código Producto</label>
+                  <input type="text" class="form-control" id="codigoProducto" placeholder="Código o nombre">
+                </div>
+                <div class="col-md-3">
+                  <label for="cantidadProducto" class="form-label">Cantidad</label>
+                  <input type="number" class="form-control" id="cantidadProducto" value="1" min="1">
+                </div>
+                <div class="col-md-3">
+                  <label for="precioProducto" class="form-label">Precio Unit.</label>
+                  <input type="number" class="form-control" id="precioProducto" step="0.01" readonly>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">&nbsp;</label>
+                  
+                <button type="button" class="btn btn-primary w-100" onclick="agregarProducto()">
+                      Agregar Producto
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lista de productos agregados -->
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table class="table table-bordered" id="tablaProductos">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Código</th>
+                          <th>Producto</th>
+                          <th>Cantidad</th>
+                          <th>Precio Unit.</th>
+                          <th>Subtotal</th>
+                          <th>Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Los productos se agregan aquí dinámicamente -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="row mt-4">
+                <div class="col-12">
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-warning" onclick="generarBoleta()">
+                      <i class="bi bi-receipt me-2"></i>Generar Boleta
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="verPreview()">
+                      <i class="bi bi-eye me-2"></i>Vista Previa
+                    </button>
+                    <button type="button" class="btn btn-outline-success" onclick="guardarBorrador()">
+                      <i class="bi bi-save me-2"></i>Guardar Borrador
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen de la venta -->
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-calculator me-2"></i>
+                Resumen de Venta
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal:</span>
+                <span id="subtotalVenta">S/ 0.00</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>IGV (18%):</span>
+                <span id="igvVenta">S/ 0.00</span>
+              </div>
+              <hr>
+              <div class="d-flex justify-content-between mb-3">
+                <strong>Total:</strong>
+                <strong id="totalVenta" class="text-primary">S/ 0.00</strong>
+              </div>
+              
+              <div class="mb-3">
+                <label for="metodoPago" class="form-label">Método de Pago</label>
+                <select class="form-select" id="metodoPago">
+                  <option value="efectivo">Efectivo</option>
+                  <option value="tarjeta">Tarjeta</option>
+                  <option value="transferencia">Transferencia</option>
+                  <option value="mixto">Mixto</option>
+                </select>
+              </div>
+
+              <div class="mb-3" id="campoEfectivo">
+                <label for="montoRecibido" class="form-label">Monto Recibido</label>
+                <input type="number" class="form-control" id="montoRecibido" step="0.01" placeholder="0.00">
+              </div>
+
+              <div class="mb-3" id="campoVuelto" style="display: none;">
+                <label class="form-label">Vuelto</label>
+                <div class="form-control bg-light" id="montoVuelto">S/ 0.00</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="observaciones" class="form-label">Observaciones</label>
+                <textarea class="form-control" id="observaciones" rows="3" placeholder="Observaciones adicionales..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Productos disponibles -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-box me-2"></i>
+                Productos Disponibles
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="mb-2">
+                <input type="text" class="form-control form-control-sm" placeholder="Buscar producto..." id="buscarProductoRapido">
+              </div>
+              <div class="producto-item d-flex justify-content-between align-items-center p-2 border-bottom" onclick="seleccionarProducto('P001', 'Coca Cola 500ml', 2.50)">
+                <div>
+                  <small class="fw-bold">R001 - Camiseta Hombre</small><br>
+                  <small class="text-muted">Stock: 50</small>
+                </div>
+                <span class="badge bg-primary">S/49.90 </span>
+              </div>
+              <div class="producto-item d-flex justify-content-between align-items-center p-2 border-bottom" onclick="seleccionarProducto('P002', 'Papas Lays Original', 3.80)">
+                <div>
+                  <small class="fw-bold">R002 - Pantalon Mujer</small><br>
+                  <small class="text-muted">Stock: 23</small>
+                </div>
+                <span class="badge bg-primary">S/ 89.50</span>
+              </div>
+              <div class="producto-item d-flex justify-content-between align-items-center p-2 border-bottom" onclick="seleccionarProducto('P005', 'Agua San Luis 625ml', 1.00)">
+                <div>
+                  <small class="fw-bold">R003 - Chaqueta Unisex</small><br>
+                  <small class="text-muted">Stock: 67</small>
+                </div>
+                <span class="badge bg-primary">S/ 129.90</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+    </div>
+
+    <!-- JS globales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/fechaActualHeader.js}"></script>
+    <script>
+      // Llama a la función
+      fechaActual();
+      setInterval(fechaActual, 1000);
+
+  </script>
+</body>
+</html>

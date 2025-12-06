@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Estilos que comparten todo-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/css/reporte.css}" />
+    <!--Estilos del titulo-->
+    <title>Gestion de productos - MAMBO</title>
+  </head>
+
+  <!----------------------------CONTENIDO-------------------------------------------------------------------------->
+  <body>
+    <!--Insertamos el sidebar-->
+    <th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+    <!--La parte interior de la pagina-->
+    <div class="main-content">
+      <!--Insertamos el navbar-->
+      <th:block th:replace="fragments/navbar :: navbar"></th:block>
+      <!--Contenido de la pagina-->
+      <main class="">
+        <!-------------------------------------------->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h1 class="mb-2">
+                <i class="bi bi-graph-up text-danger"></i>
+                Reportes y Análisis
+              </h1>
+              <p class="text-muted">Análisis de ventas y gestión de reportes</p>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-success" onclick="exportarExcel()">
+                <i class="bi bi-file-earmark-excel me-2"></i>Exportar Excel
+              </button>
+              <button class="btn btn-outline-danger" onclick="exportarPDF()">
+                <i class="bi bi-file-pdf me-2"></i>Exportar PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros de reportes -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-funnel me-2"></i>
+            Filtros de Reporte
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="tipoReporte" class="form-label">Tipo de Reporte</label>
+              <select class="form-select" id="tipoReporte" onchange="cambiarTipoReporte()">
+                <option value="ventas">Ventas</option>
+                <option value="productos">Productos</option>
+                <option value="clientes">Clientes</option>
+                <option value="vendedores">Vendedores</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="periodoReporte" class="form-label">Período</label>
+              <select class="form-select" id="periodoReporte">
+                <option value="hoy">Hoy</option>
+                <option value="semana">Esta Semana</option>
+                <option value="mes" selected>Este Mes</option>
+                <option value="trimestre">Este Trimestre</option>
+                <option value="año">Este Año</option>
+                <option value="personalizado">Personalizado</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+              <input type="date" class="form-control" id="fechaInicio">
+            </div>
+            <div class="col-md-3">
+              <label for="fechaFin" class="form-label">Fecha Fin</label>
+              <input type="date" class="form-control" id="fechaFin">
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <button class="btn btn-primary" onclick="generarReporte()">
+                <i class="bi bi-graph-up me-2"></i>Generar Reporte
+              </button>
+              <button class="btn btn-outline-secondary" onclick="limpiarFiltros()">
+                <i class="bi bi-arrow-clockwise me-2"></i>Limpiar Filtros
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen ejecutivo -->
+      <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Ventas del Período</h6>
+                  <h3 class="mb-0" id="ventasPeriodo">S/ 15,670.00</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-cash-stack fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Transacciones</h6>
+                  <h3 class="mb-0" id="transaccionesPeriodo">127</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-receipt fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-warning text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Ticket Promedio</h6>
+                  <h3 class="mb-0" id="ticketPromedio">S/ 123.39</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-calculator fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-info text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Crecimiento</h6>
+                  <h3 class="mb-0" id="crecimiento">+15.2%</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-trending-up fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos y tablas -->
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Gráfico de ventas -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-bar-chart me-2"></i>
+                <span id="tituloGrafico">Ventas por Día</span>
+              </h5>
+            </div>
+            <div class="card-body">
+              <canvas id="graficoVentas" height="300"></canvas>
+            </div>
+          </div>
+
+          <!-- Tabla de datos -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-table me-2"></i>
+                <span id="tituloTabla">Detalle de Ventas</span>
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover" id="tablaReporte">
+                  <thead class="table-dark" id="headerTabla">
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Documento</th>
+                      <th>Cliente</th>
+                      <th>Vendedor</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bodyTabla">
+                    <tr>
+                      <td>09/09/2025</td>
+                      <td>B001-123</td>
+                      <td>Juan Pérez</td>
+                      <td>Carlos Mendoza</td>
+                      <td>S/ 450.00</td>
+                    </tr>
+                    <tr>
+                      <td>09/09/2025</td>
+                      <td>F001-456</td>
+                      <td>Empresa ABC S.A.C.</td>
+                      <td>María González</td>
+                      <td>S/ 1,245.60</td>
+                    </tr>
+                    <tr>
+                      <td>08/09/2025</td>
+                      <td>B001-124</td>
+                      <td>Ana Torres</td>
+                      <td>José Pérez</td>
+                      <td>S/ 78.50</td>
+                    </tr>
+                    <tr>
+                      <td>08/09/2025</td>
+                      <td>B001-125</td>
+                      <td>Roberto Silva</td>
+                      <td>Carlos Mendoza</td>
+                      <td>S/ 234.90</td>
+                    </tr>
+                    <tr>
+                      <td>07/09/2025</td>
+                      <td>F001-457</td>
+                      <td>Distribuidora XYZ E.I.R.L.</td>
+                      <td>María González</td>
+                      <td>S/ 890.30</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Paginación -->
+              <nav aria-label="Paginación de reportes">
+                <ul class="pagination justify-content-center mt-3">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                  </li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">Siguiente</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <!-- Top productos -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-trophy me-2"></i>
+                Top 5 Productos
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Camiseta Hombre</span>
+                <span class="badge bg-primary">S/ 49.90</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Pantalon Mujer</span>
+                <span class="badge bg-primary">S/ 89.50</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar" style="width: 77%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Chaqueta Unisex</span>
+                <span class="badge bg-primary">S/ 129.90</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar" style="width: 50%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Zapatillas Deportivas</span>
+                <span class="badge bg-primary">S/ 199.00</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar" style="width: 36%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Gorra Casual </span>
+                <span class="badge bg-primary">S/ 39.90</span>
+              </div>
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar" style="width: 23%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top vendedores -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-people me-2"></i>
+                Top 5 Vendedores
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Carlos Mendoza</span>
+                <span class="badge bg-success">S/ 3,450</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar bg-success" style="width: 100%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Roberto Silva</span>
+                <span class="badge bg-success">S/ 3,120</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar bg-success" style="width: 90%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>María González</span>
+                <span class="badge bg-success">S/ 2,890</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar bg-success" style="width: 84%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Ana Torres</span>
+                <span class="badge bg-success">S/ 2,345</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar bg-success" style="width: 68%"></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>José Pérez</span>
+                <span class="badge bg-success">S/ 1,780</span>
+              </div>
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-success" style="width: 52%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alertas -->
+          <div class="card">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Alertas del Sistema
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-warning alert-sm" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>Stock Bajo:</strong> 5 productos necesitan reposición.
+              </div>
+              <div class="alert alert-info alert-sm" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Meta del Mes:</strong> Faltan S/ 4,330 para alcanzar la meta.
+              </div>
+              <div class="alert alert-success alert-sm" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <strong>Rendimiento:</strong> Superaste las ventas de la semana pasada en 15%.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ </main>
+    </div>
+
+    <!-- JS globales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/fechaActualHeader.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/js/reporte.js}"></script>
+    <script>
+      // Llama a la función
+      fechaActual();
+      setInterval(fechaActual, 1000);
+  </script>
+
+</body>
+</html> 

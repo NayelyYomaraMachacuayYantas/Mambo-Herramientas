@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MAMBO — Tu Estilo Urbano</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&family=Amiko:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+      <link th:href="@{/css/inicio.css}" rel="stylesheet" />
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+  <div th:replace="client/fragments/navbar :: navbarFragment"></div>
+
+    <header class="hero-section">
+        <div class="hero-background-model"></div>
+        <div class="hero-overlay"></div>
+        <div class="container site-container hero-content">
+            <h1 class="hero-title">MAMBO</h1>
+            <h2 class="hero-subtitle">CLOTHING</h2>
+            <p class="hero-description">
+                Tu estilo no se copia, se crea, comienza eligiendo a<br>
+                <strong style="color:var(--accent);">MAMBO</strong>
+            </p>
+            <a th:href=@{/client/listadeproductos} class="hero-cta-button">COMIENZA A ELEGIR</a>
+        </div>
+    </header>
+
+    <section id="about-section" class="about-section">
+        <div class="container site-container">
+            <div class="section-header">
+                <p class="subtitle">MAMBO CLOTHING</p>
+                <h2 class="heading">Nuestra Esencia Urbana</h2>
+            </div>
+
+            <div class="row g-4 mt-4">
+                <div class="col-md-6">
+                    <div class="mv-card">
+                        <div>
+                            <i class="bi bi-rocket-takeoff"></i>
+                            <h3>Misión</h3>
+                        </div>
+                        <p>Ser el catalizador de la **expresión individual** en la moda urbana. Ofrecemos prendas de alta calidad que fusionan el diseño de vanguardia con la comodidad callejera, permitiendo a nuestros clientes definir y proyectar su propia historia sin restricciones.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mv-card">
+                        <div>
+                            <i class="bi bi-eye"></i>
+                            <h3>Visión</h3>
+                        </div>
+                        <p>Convertirnos en la marca **líder global** de *streetwear* de lujo asequible, siendo reconocidos no solo por nuestras colecciones disruptivas, sino también por impulsar una comunidad que valora la **creatividad, la inclusión** y el futuro de la moda sostenible.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-item">
+                    <h6>Innovación Continua</h6>
+                    <p>Siempre a la vanguardia, creando tendencias y desafiando lo convencional.</p>
+                </div>
+                <div class="value-item">
+                    <h6>Calidad Intransigente</h6>
+                    <p>Cada prenda es un testimonio de nuestra dedicación a la durabilidad y el confort.</p>
+                </div>
+                <div class="value-item">
+                    <h6>Autenticidad</h6>
+                    <p>Celebramos y empoderamos la voz y el estilo único de cada individuo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container site-container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h6>Ubicación</h6>
+                    <p>Multicentro - Santa Clara - Ate<br>Tiendas N°05-393</p>
+                    <a href="https://www.google.com/maps?q=Multicentro+Santa+Clara+Ate" target="_blank" rel="noopener">Ver en Google Maps →</a>
+                </div>
+                <div class="col-md-6">
+                    <h6>Contacto</h6>
+                    <p><i class="bi bi-telephone"></i> +51 923123890<br><i class="bi bi-envelope"></i> MamboClothing@gmail.com</p>
+                    <div style="margin-top:.5rem;">
+                        <a class="me-3" href="#"><i class="bi bi-facebook fs-4"></i></a>
+                        <a class="me-3" href="#"><i class="bi bi-instagram fs-4"></i></a>
+                        <a class="" href="#"><i class="bi bi-tiktok fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartCanvas" aria-labelledby="cartLabel">
+        <div class="offcanvas-header">
+            <h5 id="cartLabel" class="offcanvas-title" style="color:var(--accent);">Tu Carrito</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="cartItemsArea">
+                <p class="muted">No hay productos en el carrito.</p>
+            </div>
+
+            <div class="mt-3 text-end">
+                <div class="muted">Total</div>
+                <div id="cartTotal" style="font-weight:900; font-size:1.15rem; margin-top:.25rem;">S/ 0.00</div>
+               <form th:action="@{/client/finalizarcompra}" method="post">
+  <button type="submit" class="add-btn w-100 mt-3">Finalizar compra</button>
+</form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" role="dialog" aria-modal="true">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color:var(--accent);">Iniciar sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="muted">Correo</label>
+                            <input required type="email" class="form-control bg-transparent border-1 text-white" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="muted">Contraseña</label>
+                            <input required type="password" class="form-control bg-transparent border-1 text-white" />
+                        </div>
+                        <button class="add-btn w-100" type="submit">Entrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mantiene la funcionalidad básica del carrito para el badge si se usa
+        let cart = JSON.parse(localStorage.getItem('mambo_cart_v1') || '[]');
+        const cartBadge = document.getElementById('cartBadge');
+        function getCartCount() { return cart.reduce((s, i) => s + i.qty, 0); }
+        function updateCartUI() {
+            cartBadge.textContent = getCartCount();
+            // Lógica para renderizar items en offcanvas si lo deseas
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartUI();
+            // Lógica simple de demo para el login (sin el catálogo, no hay "add to cart" por ahora)
+            document.getElementById('loginForm')?.addEventListener('submit', e => {
+                e.preventDefault();
+                const bs = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                bs.hide();
+                alert('Sesión iniciada (demo)');
+            });
+        });
+
+         // 🔹 Mostrar usuario autenticado desde localStorage
+    document.addEventListener("DOMContentLoaded", () => {
+      const userData = localStorage.getItem("usuario");
+      const token = localStorage.getItem("token");
+      const userMenu = document.getElementById("userMenu");
+      const loginLink = document.getElementById("loginLink");
+
+      if (token && userData) {
+        const usuario = JSON.parse(userData);
+        document.getElementById("userName").textContent = usuario.nombre + " " + usuario.apellido;
+        userMenu.style.display = "block";
+        loginLink.style.display = "none";
+      } else {
+        userMenu.style.display = "none";
+        loginLink.style.display = "block";
+      }
+
+      // 🔹 Logout
+      document.getElementById("logoutBtn")?.addEventListener("click", () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        location.reload();
+      });
+
+      // 🔹 Carrito
+      let cart = JSON.parse(localStorage.getItem('mambo_cart_v1') || '[]');
+      const cartBadge = document.getElementById('cartBadge');
+      const getCartCount = () => cart.reduce((s, i) => s + i.qty, 0);
+      cartBadge.textContent = getCartCount();
+    });
+    </script>
+</body>
+
+</html>

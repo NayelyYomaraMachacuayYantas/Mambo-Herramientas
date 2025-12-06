@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Estilos -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+
+    <title>Gestión de productos - MAMBO</title>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+
+    <div class="main-content">
+      <!-- Navbar -->
+      <th:block th:replace="fragments/navbar :: navbar"></th:block>
+
+      <main class="content container-fluid">
+        <!-- Encabezado -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 class="mb-2">
+              <i class="bi bi-box text-success"></i> Gestión de Productos
+            </h1>
+            <p class="text-muted">Administra tu inventario y productos</p>
+          </div>
+          <button
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#modalNuevoProducto"
+          >
+            <i class="bi bi-plus-circle me-2"></i>Nuevo Producto
+          </button>
+        </div>
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2"
+        >
+          <!-- 🔍 Buscador -->
+          <div class="input-group w-auto">
+            <span class="input-group-text bg-white"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              id="buscador"
+              class="form-control"
+              placeholder="Buscar por nombre..."
+            />
+          </div>
+
+          <!-- ⚙️ Filtro por stock -->
+          <div class="d-flex align-items-center gap-2">
+            <label class="fw-semibold text-secondary mb-0"
+              >Filtrar por stock:</label
+            >
+            <select id="filtroStock" class="form-select form-select-sm w-auto">
+              <option value="todos">Todos</option>
+              <option value="sin-stock">Sin stock</option>
+              <option value="bajo-stock">Bajo stock</option>
+              <option value="en-stock">En stock</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabla de productos -->
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">
+              <i class="bi bi-table me-2"></i> Lista de Productos
+            </h5>
+          </div>
+
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID</th>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="p : ${productos}">
+                    <td th:text="${p.id}"></td>
+
+                    <!-- Imagen del producto -->
+                    <td>
+                      <img
+                        th:if="${p.imagenUrl != null}"
+                        th:src="@{${p.imagenUrl}}"
+                        alt="Imagen"
+                        class="rounded shadow-sm"
+                        style="width: 70px; height: 70px; object-fit: cover"
+                      />
+                      <span
+                        th:if="${p.imagenUrl == null}"
+                        class="text-muted fst-italic"
+                        >Sin imagen</span
+                      >
+                    </td>
+
+                    <td th:text="${p.nombre}"></td>
+                    <td
+                      th:text="${p.categoria != null ? p.categoria.nombre : 'Sin categoría'}"
+                    ></td>
+                    <td>S/ <span th:text="${p.precio}">0.00</span></td>
+                    <td th:text="${p.stock}">0</td>
+
+                    <!-- Estado del stock -->
+                    <td>
+                      <span th:if="${p.stock == 0}" class="badge bg-danger"
+                        >Sin stock</span
+                      >
+                      <span
+                        th:if="${p.stock > 0 and p.stock < 10}"
+                        class="badge bg-warning text-dark"
+                        >Bajo stock</span
+                      >
+                      <span th:if="${p.stock >= 10}" class="badge bg-success"
+                        >En stock</span
+                      >
+                    </td>
+
+                    <td>
+                      <a
+                        th:href="@{'/admin/productos/eliminar/' + ${p.id}}"
+                        class="btn btn-sm btn-outline-danger"
+                        title="Eliminar"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalActualizar"
+                        th:attr="data-id=${p.id},
+                                     data-nombre=${p.nombre},
+                                     data-categoria=${p.categoria != null ? p.categoria.id : 0},
+                                     data-precio=${p.precio},
+                                     data-stock=${p.stock},
+                                     data-descripcion=${p.descripcion},
+                                     data-imagen=${p.imagenUrl}"
+                      >
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Nuevo Producto -->
+        <div class="modal fade" id="modalNuevoProducto" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <form
+                th:action="@{/admin/productos/guardar}"
+                th:object="${productoDTO}"
+                method="post"
+                enctype="multipart/form-data"
+              >
+                <div class="modal-header">
+                  <h5 class="modal-title">
+                    <i class="bi bi-box me-2"></i> Nuevo Producto
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Nombre *</label>
+                      <input
+                        type="text"
+                        th:field="*{nombre}"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Categoría *</label>
+                      <select
+                        th:field="*{categoriaID}"
+                        class="form-select"
+                        required
+                      >
+                        <option value="" disabled selected>Selecciona</option>
+                        <option
+                          th:each="cat : ${categorias}"
+                          th:value="${cat.id}"
+                          th:text="${cat.nombre}"
+                        ></option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Precio *</label>
+                      <div class="input-group">
+                        <span class="input-group-text">S/</span>
+                        <input
+                          type="number"
+                          th:field="*{precio}"
+                          class="form-control"
+                          step="0.01"
+                          min="0"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Stock *</label>
+                      <input
+                        type="number"
+                        th:field="*{stock}"
+                        class="form-control"
+                        min="0"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea
+                      th:field="*{descripcion}"
+                      class="form-control"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="mt-3">
+                    <label class="form-label">Imagen</label>
+                    <input
+                      type="file"
+                      th:field="*{imagen}"
+                      class="form-control"
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                  <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Actualizar Producto -->
+        <div class="modal fade" id="modalActualizar" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <form
+                th:action="@{/admin/productos/actualizar}"
+                method="post"
+                enctype="multipart/form-data"
+              >
+                <div class="modal-header">
+                  <h5 class="modal-title">
+                    <i class="bi bi-pencil-square me-2"></i> Editar Producto
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+
+                <div class="modal-body">
+                  <input type="hidden" name="id" />
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Nombre *</label>
+                      <input
+                        type="text"
+                        name="nombre"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Categoría *</label>
+                      <select name="categoriaID" class="form-select" required>
+                        <option value="" disabled>Selecciona</option>
+                        <option
+                          th:each="cat : ${categorias}"
+                          th:value="${cat.id}"
+                          th:text="${cat.nombre}"
+                        ></option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Precio *</label>
+                      <div class="input-group">
+                        <span class="input-group-text">S/</span>
+                        <input
+                          type="number"
+                          name="precio"
+                          class="form-control"
+                          step="0.01"
+                          min="0"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Stock *</label>
+                      <input
+                        type="number"
+                        name="stock"
+                        class="form-control"
+                        min="0"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="mt-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea
+                      name="descripcion"
+                      class="form-control"
+                      rows="3"
+                    ></textarea>
+                  </div>
+
+                  <!-- Imagen actual -->
+                  <div class="mt-3">
+                    <label class="form-label">Imagen actual</label><br />
+                    <img
+                      id="imagenActual"
+                      src=""
+                      alt="Imagen actual"
+                      style="
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover;
+                        border-radius: 8px;
+                        border: 1px solid #ccc;
+                      "
+                    />
+                  </div>
+
+                  <!-- Nueva imagen -->
+                  <div class="mt-3">
+                    <label class="form-label">Nueva imagen (opcional)</label>
+                    <input
+                      type="file"
+                      name="imagen"
+                      class="form-control"
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                  <button type="submit" class="btn btn-success">
+                    Actualizar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const modal = document.getElementById("modalActualizar");
+      modal.addEventListener("show.bs.modal", function (event) {
+        const button = event.relatedTarget;
+
+        document.querySelector('#modalActualizar input[name="id"]').value =
+          button.getAttribute("data-id");
+        document.querySelector('#modalActualizar input[name="nombre"]').value =
+          button.getAttribute("data-nombre");
+        document.querySelector(
+          '#modalActualizar select[name="categoriaID"]'
+        ).value = button.getAttribute("data-categoria");
+        document.querySelector('#modalActualizar input[name="precio"]').value =
+          button.getAttribute("data-precio");
+        document.querySelector('#modalActualizar input[name="stock"]').value =
+          button.getAttribute("data-stock");
+        document.querySelector(
+          '#modalActualizar textarea[name="descripcion"]'
+        ).value = button.getAttribute("data-descripcion");
+
+        const imagenActual = button.getAttribute("data-imagen");
+        const imgTag = document.getElementById("imagenActual");
+        if (imagenActual) {
+          imgTag.src = imagenActual;
+          imgTag.style.display = "block";
+        } else {
+          imgTag.style.display = "none";
+        }
+      });
+       const buscador = document.getElementById('buscador');
+  const filtroStock = document.getElementById('filtroStock');
+  const filas = document.querySelectorAll('tbody tr');
+
+  function filtrarProductos() {
+    const texto = buscador.value.toLowerCase();
+    const filtro = filtroStock.value;
+
+    filas.forEach(fila => {
+      const nombre = fila.querySelector('td:nth-child(3)').textContent.toLowerCase();
+      const badge = fila.querySelector('.badge');
+      let estado = '';
+
+      if (badge.classList.contains('bg-danger')) estado = 'sin-stock';
+      else if (badge.classList.contains('bg-warning')) estado = 'bajo-stock';
+      else if (badge.classList.contains('bg-success')) estado = 'en-stock';
+
+      const coincideNombre = nombre.includes(texto);
+      const coincideStock = filtro === 'todos' || estado === filtro;
+
+      fila.style.display = (coincideNombre && coincideStock) ? '' : 'none';
+    });
+  }
+
+  buscador.addEventListener('input', filtrarProductos);
+  filtroStock.addEventListener('change', filtrarProductos);
+    </script>
+  </body>
+</html>

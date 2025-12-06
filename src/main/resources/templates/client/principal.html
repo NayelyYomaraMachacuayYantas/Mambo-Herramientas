@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAMBO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <link th:href="@{/css/principal.css}" rel="stylesheet" />
+</head>
+
+<body>
+  <div th:replace="client/fragments/navbar :: navbarFragment"></div>
+
+  <main>
+    <section class="carrusel-grande my-5">
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+            aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+            aria-label="Slide 2"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img th:src="@{/img/fondo1.png}" class="d-block w-100" alt="Colección de verano" />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>NUEVA COLECCIÓN</h5>
+              <p>Explora nuestros nuevos diseños de temporada</p>
+              <button class="btn btn-light rounded-pill mt-3">Ver ahora</button>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img th:src="@{/img/mambo.jpeg}" class="d-block w-100" alt="Ofertas especiales" />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>OFERTAS EXCLUSIVAS</h5>
+              <p>Prendas con hasta 50% de descuento</p>
+              <button class="btn btn-light rounded-pill mt-3">Comprar</button>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="container my-5">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <img th:src="@{/img/ofertas.jpg}" alt="Oferta de la semana" class="banner-img" />
+        </div>
+        <div class="col-md-6">
+          <img th:src="@{/img/llegadas.jpg}" alt="Nuevas llegadas" class="banner-img" />
+        </div>
+      </div>
+    </section>
+
+    <section class="container my-5">
+      <div class="row text-center">
+        <div class="col-md-6 mb-4">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <h3 class="fw-bold mb-3">Misión</h3>
+            <p>
+              Consolidarnos como marca líder que conecta culturas y estilos
+              Ofrecer prendas auténticas y de calidad que reflejen identidad y creatividad
+
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <h3 class="fw-bold mb-3">Visión</h3>
+            <p>
+              Ser reconocidos internacionalmente como referente de moda innovadora, juvenil y con estilo.
+              Que cada prenda MAMBO sea sinónimo de individualidad y empoderamiento
+
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container my-5">
+      <h2 class="fw-bold text-center mb-4">ELIGE TU CATEGORÍA</h2>
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="card category-card">
+            <img th:src="@{/img/Accesorios.png}" class="card-img-top" alt="Accesorios" />
+            <div class="card-body text-center fw-bold">Accesorios</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card category-card">
+            <img th:src="@{/img/polo.png}" class="card-img-top" alt="Polo" />
+            <div class="card-body text-center fw-bold">Polos</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card category-card">
+            <img th:src="@{/img/pantalon.png}" class="card-img-top" alt="Pantalones" />
+            <div class="card-body text-center fw-bold">Pantalones</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card category-card">
+            <img th:src="@{/img/conjunto.png}" class="card-img-top" alt="Conjuntos" />
+            <div class="card-body text-center fw-bold">Conjuntos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center">
+    <div class="container">
+      <p class="mb-1">MAMBO © 2025 - Todos los derechos reservados</p>
+      <div>
+        <a href="https://www.facebook.com/profile.php?id=100069715106893" class="text-white mx-2"><i
+            class="bi bi-facebook"></i></a>
+        <a href="https://www.instagram.com/mambo_clothingperu/" class="text-white mx-2"><i
+            class="bi bi-instagram"></i></a>
+        <a href="#" class="text-white mx-2"><i class="bi bi-whatsapp"></i></a>
+      </div>
+    </div>
+  </footer>
+   <script th:src="@{/js/carrito.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    
+    /********* Estado del carrito (persistido) *********/
+    let cart = JSON.parse(localStorage.getItem('mambo_cart_v1') || '[]');
+  </script>
+</body>
+
+</html>

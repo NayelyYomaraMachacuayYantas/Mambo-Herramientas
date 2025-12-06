@@ -1,0 +1,81 @@
+<!-- templates/client/navbar.html -->
+<div th:fragment="navbarFragment">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container site-container">
+      <a class="navbar-brand text-white" href="#">MAMBO</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navMain">
+        <ul class="navbar-nav align-items-center">
+          <li class="nav-item"><a class="nav-link" th:href=@{/}>Home</a></li>
+          <li class="nav-item"><a class="nav-link" th:href=@{/client/listadeproductos}>Productos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contáctanos</a></li>
+
+          <!-- Usuario no autenticado -->
+          <!-- Usuario no autenticado -->
+          <li class="nav-item" sec:authorize="isAnonymous()">
+            <a class="nav-link" th:href="@{/login}">
+              <i class="bi bi-person"></i> Iniciar
+            </a>
+          </li>
+
+          <!-- Usuario autenticado -->
+          <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle"></i>
+              <!-- Aquí mostramos el nombre real -->
+              <span th:text="${#authentication.principal.nombreCompleto}">Usuario</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" th:href="@{/client/historialcompra}">Historial</a></li>
+              <li><a class="dropdown-item" th:href="@{/logout}">Cerrar sesión</a></li>
+            </ul>
+          </li>
+
+
+          <!-- Botón carrito -->
+          <li class="nav-item ms-2">
+            <button class="btn btn-dark position-relative" data-bs-toggle="offcanvas" data-bs-target="#cartCanvas"
+              aria-controls="cartCanvas">
+              <i class="bi bi-cart3 fs-5"></i>
+              <span id="cartBadge" class="badge-accent position-absolute top-0 start-100 translate-middle">0</span>
+            </button>
+          </li>
+
+          <!-- Historial botón extra -->
+          <li class="nav-item ms-2">
+            <a th:href="@{/client/historialcompra}" class="btn btn-dark" title="Historial de compras">
+              <i class="bi bi-clock-history fs-5"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MODAL / OFFCANVAS DEL CARRITO -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="cartCanvas" aria-labelledby="cartCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="cartCanvasLabel">Carrito</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div id="cartItemsArea">
+      <p class="muted">Tu carrito está vacío</p>
+    </div>
+
+    <div class="mt-3 text-end">
+      <div class="muted">Total</div>
+      <div id="cartTotal" style="font-weight:900; font-size:1.15rem; margin-top:.25rem;">S/ 0.00</div>
+      <button id="checkoutBtn" class="btn-checkout w-100 mt-3">Finalizar compra</button>
+    </div>
+  </div>
+</div>
+
+
+</div>

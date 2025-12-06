@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MAMBO — Tienda Urbana (Oscuro)</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Fuente moderna -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap"
+    rel="stylesheet" />
+  <link th:href="@{/css/listaProductos.css}" rel="stylesheet" />
+  <style></style>
+</head>
+
+<body>
+  <div th:replace="client/fragments/navbar :: navbarFragment"></div>
+
+  <!-- SITE CONTENT -->
+  <div class="site-container">
+    <div class="hero" role="banner" aria-label="Banner principal">
+      <h1>Encuentra tu estilo</h1>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+      <!-- SIDEBAR FILTER -->
+      <aside class="sidebar d-none d-md-block" aria-label="Filtros">
+        <h5>Filtrar</h5>
+
+        <label class="muted">Categorías</label>
+        <button class="category-btn" data-cat="Poleras">Poleras</button>
+        <button class="category-btn" data-cat="Chaquetas">Chaquetas</button>
+        <button class="category-btn" data-cat="Pantalones">Pantalones</button>
+        <button class="category-btn" data-cat="Shorts">Shorts</button>
+        <button class="category-btn" data-cat="Accesorios">Accesorios</button>
+        <button class="category-btn" data-cat="Ofertas">Ofertas</button>
+
+        <hr style="border-color: rgba(255, 255, 255, 0.03)" />
+
+        <label class="muted">Precio (S/)</label>
+        <div class="price-range">
+          <input id="minPrice" type="number" placeholder="Mín" min="0" />
+          <input id="maxPrice" type="number" placeholder="Máx" min="0" />
+        </div>
+
+        <div style="margin-top: 10px">
+          <button id="applyFilter" class="category-btn" style="background: var(--accent); color: #050506">
+            Aplicar
+          </button>
+          <button id="clearFilter" class="category-btn" style="margin-top: 6px">
+            Limpiar filtros
+          </button>
+        </div>
+      </aside>
+
+      <!-- CATALOG + PRODUCTS -->
+      <section class="catalogo">
+        <!-- top (title + search) -->
+        <div class="catalog-top">
+          <div class="catalog-title">Catálogo</div>
+
+          <div class="search-box" role="search" aria-label="Buscar productos">
+            <input id="searchInput" placeholder="Buscar por nombre..." />
+            <button id="searchBtn" title="Buscar">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-outline-warning d-md-none mb-3" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasFiltro">
+          <i class="bi bi-funnel"></i> Filtros
+        </button>
+        <div class="offcanvas offcanvas-start bg-dark text-white d-block d-md-none" tabindex="-1" id="offcanvasFiltro">
+          <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title text-uppercase text-warning">
+              Filtrado
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+          </div>
+          <div class="offcanvas-body">
+            <label class="muted">Categorías</label>
+            <button class="category-btn" data-cat="Poleras">Poleras</button>
+            <button class="category-btn" data-cat="Chaquetas">
+              Chaquetas
+            </button>
+            <button class="category-btn" data-cat="Pantalones">
+              Pantalones
+            </button>
+            <button class="category-btn" data-cat="Shorts">Shorts</button>
+            <button class="category-btn" data-cat="Accesorios">
+              Accesorios
+            </button>
+            <button class="category-btn" data-cat="Ofertas">Ofertas</button>
+
+            <hr style="border-color: rgba(255, 255, 255, 0.03)" />
+
+            <label class="muted">Precio (S/)</label>
+            <div class="price-range">
+              <input id="minPrice" type="number" placeholder="Mín" min="0" />
+              <input id="maxPrice" type="number" placeholder="Máx" min="0" />
+            </div>
+
+            <div style="margin-top: 10px">
+              <button id="applyFilter" class="category-btn" style="background: var(--accent); color: #050506">
+                Aplicar
+              </button>
+              <button id="clearFilter" class="category-btn" style="margin-top: 6px">
+                Limpiar filtros
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCT GRID -->
+        <div id="productsGrid" class="products-grid">
+          <div th:each="producto : ${productos}" class="card-product">
+            <div class="media">
+              <img th:src="${producto.imagenUrl}" th:alt="${producto.nombre}" />
+            </div>
+            <div class="body">
+              <div>
+                <div class="product-title" th:text="${producto.nombre}"></div>
+                <div class="product-sub muted">
+                  Categoría:
+                  <span th:text="${producto.categoria.nombre}"></span>
+                </div>
+                <div class="product-sub muted">
+                  Stock: <span th:text="${producto.stock}"></span>
+                </div>
+              </div>
+              <div class="price-row">
+                <div class="price">
+                  S/ <span th:text="${producto.precio}"></span>
+                </div>
+                <button class="add-btn" th:attr="data-id=${producto.id},
+                                 data-nombre=${producto.nombre},
+                                 data-precio=${producto.precio},
+                                 data-img=${producto.imagenUrl}">
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aquí se insertarán los productos dinámicamente con JS -->
+
+        <!-- Cards se insertan por JS -->
+        <!--Lo demas esta en carrito-->
+
+        <hr class="mx-2 mt-5" />
+        <h4>CATEGORIAS A ELEGIR</h4>
+        <!-- categories chips debajo -->
+        <div class="chips" aria-hidden="false">
+          <div class="chip" data-cat="Poleras">Poleras</div>
+          <div class="chip" data-cat="Chaquetas">Chaquetas</div>
+          <div class="chip" data-cat="Pantalones">Pantalones</div>
+          <div class="chip" data-cat="Accesorios">Accesorios</div>
+          <div class="chip" data-cat="Ofertas">Ofertas</div>
+        </div>
+      </section>
+    </div>
+    <!-- main-grid -->
+  </div>
+  <!-- site-container -->
+
+  <!-- OFFCANVAS CART -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="cartCanvas" aria-labelledby="cartLabel">
+    <div class="offcanvas-header">
+      <h5 id="cartLabel" class="offcanvas-title">Tu Carrito</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div id="cartItemsArea">
+        <p class="muted">No hay productos en el carrito.</p>
+      </div>
+
+      <div class="mt-3 text-end">
+        <div class="muted">Total</div>
+        <div id="cartTotal" style="font-weight: 900; font-size: 1.15rem; margin-top: 0.25rem">
+          S/ 0.00
+        </div>
+        <button id="checkoutBtn" class="add-btn w-100 mt-3">
+          Finalizar compra
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" role="dialog" aria-modal="true">
+        <div class="modal-header">
+          <h5 class="modal-title">Iniciar sesión</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <div class="mb-3">
+              <label class="muted">Correo</label>
+              <input required type="email" class="form-control bg-transparent border-1 text-white" />
+            </div>
+            <div class="mb-3">
+              <label class="muted">Contraseña</label>
+              <input required type="password" class="form-control bg-transparent border-1 text-white" />
+            </div>
+            <button class="add-btn w-100" type="submit">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="site-container">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h6>Ubicación</h6>
+          <p class="muted">
+            Multicentro - Santa Clara - Ate<br />Tiendas N°05-393
+          </p>
+          <a href="https://www.google.com/maps?q=Multicentro+Santa+Clara+Ate" target="_blank" rel="noopener"
+            class="muted">Ver en Google Maps →</a>
+        </div>
+        <div class="col-md-6">
+          <h6>Contacto</h6>
+          <p class="muted">
+            <i class="bi bi-telephone"></i> +51 923123890<br /><i class="bi bi-envelope"></i>
+            MamboClothing@gmail.com
+          </p>
+          <div style="margin-top: 0.5rem">
+            <a class="muted me-3" href="#"><i class="bi bi-facebook fs-4"></i></a>
+            <a class="muted me-3" href="#"><i class="bi bi-instagram fs-4"></i></a>
+            <a class="muted" href="#"><i class="bi bi-tiktok fs-4"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+/* Carrito: localStorage + UI + checkout */
+const CART_KEY = 'mambo_cart_v1';
+
+// helpers CSRF cookie
+function getCookie(name) {
+  const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return m ? decodeURIComponent(m.pop()) : null;
+}
+
+function loadCart() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+  catch (e) { console.error('Error parseando carrito', e); return []; }
+}
+function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+
+let cart = loadCart();
+
+function getCartCount() { return cart.reduce((s, i) => s + (i.qty || 0), 0); }
+function computeTotal() { return cart.reduce((s, i) => s + (Number(i.price) || 0) * (i.qty || 0), 0); }
+
+function safeEl(id) { return document.getElementById(id) || null; }
+
+function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function updateCartUI(){
+  const cartBadge = safeEl('cartBadge');
+  const cartItemsArea = safeEl('cartItemsArea');
+  const cartTotalEl = safeEl('cartTotal');
+
+  if (cartBadge) cartBadge.textContent = getCartCount();
+
+  if (!cartItemsArea) return;
+  cartItemsArea.innerHTML = '';
+
+  if (!cart || cart.length === 0) {
+    cartItemsArea.innerHTML = '<p class="muted">No hay productos en el carrito.</p>';
+  } else {
+    cart.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'd-flex align-items-center mb-3';
+      div.innerHTML = `
+        <img src="${escapeHtml(item.img||'')}" alt="${escapeHtml(item.name)}" style="width:56px;height:56px;object-fit:cover;margin-right:.75rem"/>
+        <div style="flex:1">
+          <div class="fw-bold">${escapeHtml(item.name)}</div>
+          <div class="small text-muted">S/ ${Number(item.price).toFixed(2)} × ${item.qty}</div>
+        </div>
+        <div class="text-end">
+          <div>S/ ${(Number(item.price)*item.qty).toFixed(2)}</div>
+          <div class="mt-1">
+            <button class="btn btn-sm btn-outline-secondary btn-decrease" data-id="${escapeHtml(item.id)}">−</button>
+            <button class="btn btn-sm btn-outline-secondary btn-increase" data-id="${escapeHtml(item.id)}">+</button>
+            <button class="btn btn-sm btn-link text-danger remove-btn" data-id="${escapeHtml(item.id)}">Eliminar</button>
+          </div>
+        </div>
+      `;
+      cartItemsArea.appendChild(div);
+    });
+
+    // attach listeners (only for rendered buttons)
+    cartItemsArea.querySelectorAll('.btn-decrease').forEach(b => b.addEventListener('click', e => changeQty(e.currentTarget.dataset.id, -1)));
+    cartItemsArea.querySelectorAll('.btn-increase').forEach(b => b.addEventListener('click', e => changeQty(e.currentTarget.dataset.id, +1)));
+    cartItemsArea.querySelectorAll('.remove-btn').forEach(b => b.addEventListener('click', e => removeFromCart(e.currentTarget.dataset.id)));
+  }
+
+  if (cartTotalEl) cartTotalEl.textContent = `S/ ${computeTotal().toFixed(2)}`;
+}
+
+function addToCart(product){
+  const id = String(product.id);
+  const existing = cart.find(i => String(i.id) === id);
+  if (existing) existing.qty = (existing.qty || 0) + 1;
+  else cart.push({ id, name: product.name, price: Number(product.price), img: product.img || '', qty: 1 });
+  saveCart(cart);
+  updateCartUI();
+  const offcanvasEl = safeEl('cartCanvas');
+  if (offcanvasEl) bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl).show();
+}
+
+function removeFromCart(id){
+  cart = cart.filter(i => String(i.id) !== String(id));
+  saveCart(cart);
+  updateCartUI();
+}
+
+function changeQty(id, delta){
+  const it = cart.find(i => String(i.id) === String(id));
+  if (!it) return;
+  it.qty = (it.qty || 0) + delta;
+  if (it.qty < 1) it.qty = 1;
+  saveCart(cart);
+  updateCartUI();
+}
+
+/* Delegación: add buttons y controles globales */
+document.addEventListener('click', (e) => {
+  const addBtn = e.target.closest('.add-btn');
+  if (addBtn) {
+    const product = {
+      id: addBtn.dataset.id,
+      name: addBtn.dataset.nombre || addBtn.getAttribute('data-nombre'),
+      price: parseFloat(addBtn.dataset.precio || addBtn.getAttribute('data-precio') || '0'),
+      img: addBtn.dataset.img || addBtn.getAttribute('data-img') || ''
+    };
+    addToCart(product);
+    return;
+  }
+
+  const dec = e.target.closest('.btn-decrease');
+  if (dec) { changeQty(dec.dataset.id, -1); return; }
+
+  const inc = e.target.closest('.btn-increase');
+  if (inc) { changeQty(inc.dataset.id, +1); return; }
+
+  const rem = e.target.closest('.remove-btn');
+  if (rem) { removeFromCart(rem.dataset.id); return; }
+});
+
+/* Checkout: envía carrito al backend y limpia localStorage al ok.
+   Incluye cookie CSRF (si existe) y Authorization si hay jwtToken en localStorage.
+   Usa credentials:'same-origin' para enviar JSESSIONID si aplica.
+*/
+async function checkout() {
+  if (!cart || cart.length === 0) { alert('Tu carrito está vacío.'); return; }
+
+  const csrf = getCookie('XSRF-TOKEN') || getCookie('X-XSRF-TOKEN') || getCookie('_csrf');
+  const jwt = localStorage.getItem('jwtToken');
+
+  const carritoDTO = {
+    // si tu backend espera clienteId lo puede ignorar (tu controlador usa Principal)
+    detalles: cart.map(item => ({ productoId: Number(item.id), cantidad: Number(item.qty) }))
+  };
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (csrf) headers['X-XSRF-TOKEN'] = csrf;
+  if (jwt) headers['Authorization'] = 'Bearer ' + jwt;
+
+  try {
+    const res = await fetch('/api/carrito', {
+      method: 'POST',
+      headers,
+      credentials: 'same-origin', // importante para cookies de sesión
+      body: JSON.stringify(carritoDTO)
+    });
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => 'error');
+      console.error('Error en checkout:', res.status, txt);
+      alert('Error al finalizar compra. Revisa la consola.');
+      return;
+    }
+
+    // éxito
+    await res.json().catch(()=>null);
+    localStorage.removeItem(CART_KEY);
+    cart = [];
+    updateCartUI();
+    alert('Compra realizada con éxito!');
+    // redirigir si quieres:
+    // window.location.href = '/client/historialcompra';
+  } catch (err) {
+    console.error('Exception checkout:', err);
+    alert('Error de conexión. Intente más tarde.');
+  }
+}
+
+/* Inicialización: listeners de UI (filtros, login modal, checkout) */
+document.addEventListener('DOMContentLoaded', () => {
+  // Añade listeners para botones de añadir generados por Thymeleaf (si quieres)
+  // (el handler delegado document ya cubre .add-btn)
+  updateCartUI();
+
+  // filtros / UI (mantener lo que tenías)
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const active = btn.classList.contains('active');
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      if (!active) btn.classList.add('active');
+      // applyFilters(); // si implementas filtrado
+    });
+  });
+
+  // checkout button
+  const checkoutBtn = safeEl('checkoutBtn');
+  if (checkoutBtn) checkoutBtn.addEventListener('click', checkout);
+
+  // login modal demo handler (si existe)
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const bs = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+      if (bs) bs.hide();
+      alert('Sesión iniciada (demo)');
+    });
+  }
+});
+</script>
+  <!-- ...existing code... -->
+</body>
+
+</html>

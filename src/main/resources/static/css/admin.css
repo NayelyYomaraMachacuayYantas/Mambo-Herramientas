@@ -1,0 +1,122 @@
+body {
+  padding-top: 56px; /* Altura del navbar */
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar fijo izquierdo, responsive */
+.sidebar {
+  position: fixed;
+  top: 56px; /* debajo del navbar */
+  left: 0; /* cambio de derecha a izquierda */
+  width: 250px;
+  height: calc(100vh - 56px);
+  background-color: #0D0123;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.3s ease;
+    overflow-y: auto; /* permite scroll si hay muchos links */
+}
+
+/* Ocultar sidebar en pantallas pequeñas y cambiar el layout */
+@media (max-width: 767.98px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  .sidebar img {
+    width: 100px;
+    margin-bottom: 0;
+  }
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Contenido principal con margen izquierdo para sidebar */
+.content {
+  margin-left: 250px; /* ajustado para sidebar izquierda */
+  padding: 30px;
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 767.98px) {
+  .content {
+    margin-left: 0;
+    padding: 15px;
+  }
+}
+
+/* Logo sidebar */
+.sidebar img {
+  width: 180px;
+  margin-bottom: 30px;
+}
+.sidebar {
+  overflow-y: auto; /* permite scroll si los links no caben */
+}
+.sidebar .logo {
+ width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center; /* Centra los elementos dentro del logo */
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 25px;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: white;
+  letter-spacing: 6px;
+}
+/* Links del menú */
+.nav-link {
+  color: white;
+  font-weight: 600;
+  margin: 8px 0;
+  text-align: left;
+  text-decoration: none;
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: block;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.selected {
+  background-color: #FF0040;
+  color: white !important;
+}
+
+/* Admin texto resaltado */
+#admin-text.selected {
+  color: #FF0040 !important;
+  font-weight: 700;
+}
+
+/* Navbar estilo */
+.navbar {
+  background-color: rgb(240, 240, 240);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1030;
+}
+
+.perfil {
+  width: 30px;
+  height: 30px;
+}
+
+.exit {
+  width: 20px;
+  height: 20px;
+}

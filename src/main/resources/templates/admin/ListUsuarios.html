@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Estilos que comparten todo-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+    <!--Estilos del titulo-->
+    <title>Vendedores</title>
+  </head>
+
+  <!----------------------------CONTENIDO-------------------------------------------------------------------------->
+  <body>
+    <!--Insertamos el sidebar-->
+    <th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+    <!--La parte interior de la pagina-->
+    <div class="main-content">
+      <!--Insertamos el navbar-->
+      <th:block th:replace="fragments/navbar :: navbar"></th:block>
+      <!--Contenido de la pagina-->
+      <main class="">
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h1 class="mb-2">
+                <i class="bi bi-person-badge text-dark"></i>
+                Gestión de Vendedores
+              </h1>
+              <p class="text-muted">Administra tu equipo de ventas</p>
+            </div>
+            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalNuevoVendedor">
+              <i class="bi bi-plus-circle me-2"></i>Nuevo Vendedor
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas de vendedores -->
+      <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-dark text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Total Vendedores</h6>
+                  <h3 class="mb-0">8</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-people fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Activos</h6>
+                  <h3 class="mb-0">7</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-person-check fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Ventas del Mes</h6>
+                  <h3 class="mb-0">S/ 15,670</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-graph-up fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="card bg-info text-white">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="card-title">Promedio por Vendedor</h6>
+                  <h3 class="mb-0">S/ 2,240</h3>
+                </div>
+                <div class="align-self-center">
+                  <i class="bi bi-calculator fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros y búsqueda -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input type="text" class="form-control" placeholder="Buscar vendedor..." id="buscarVendedor">
+              </div>
+            </div>
+            <div class="col-md-3">
+            <select class="form-select" id="filtroEstado" name="estado" aria-label="Filtrar por estado">
+                <option value="">Todos los estados</option>
+                <option value="activo">Activos</option>
+                <option value="inactivo">Inactivos</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filtroTurno" name="turno" aria-label="Filtrar por turno">
+                <option value="">Todos los turnos</option>
+                <option value="manana">Mañana</option>
+                <option value="tarde">Tarde</option>
+                <option value="noche">Noche</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-outline-secondary w-100">
+                <i class="bi bi-funnel me-2"></i>Filtrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de vendedores -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-table me-2"></i>
+            Lista de Vendedores
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre Completo</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
+                  <th>Turno</th>
+                  <th>Ventas del Mes</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>V001</td>
+                  <td>Carlos Mendoza López</td>
+                  <td>carlos.mendoza@mambo.com</td>
+                  <td>987654321</td>
+                  <td><span class="badge bg-primary">Mañana</span></td>
+                  <td>S/ 3,450.00</td>
+                  <td><span class="badge bg-success">Activo</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-info me-1" title="Ver detalles">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success me-1" title="Ventas">
+                      <i class="bi bi-graph-up"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" title="Desactivar">
+                      <i class="bi bi-person-x"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>V002</td>
+                  <td>María González Ríos</td>
+                  <td>maria.gonzalez@mambo.com</td>
+                  <td>987654322</td>
+                  <td><span class="badge bg-warning">Tarde</span></td>
+                  <td>S/ 2,890.00</td>
+                  <td><span class="badge bg-success">Activo</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-info me-1" title="Ver detalles">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success me-1" title="Ventas">
+                      <i class="bi bi-graph-up"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" title="Desactivar">
+                      <i class="bi bi-person-x"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>V003</td>
+                  <td>José Antonio Pérez</td>
+                  <td>jose.perez@mambo.com</td>
+                  <td>987654323</td>
+                  <td><span class="badge bg-dark">Noche</span></td>
+                  <td>S/ 1,780.00</td>
+                  <td><span class="badge bg-success">Activo</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-info me-1" title="Ver detalles">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success me-1" title="Ventas">
+                      <i class="bi bi-graph-up"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" title="Desactivar">
+                      <i class="bi bi-person-x"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>V004</td>
+                  <td>Ana Lucía Torres</td>
+                  <td>ana.torres@mambo.com</td>
+                  <td>987654324</td>
+                  <td><span class="badge bg-primary">Mañana</span></td>
+                  <td>S/ 2,345.00</td>
+                  <td><span class="badge bg-warning">Inactivo</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-info me-1" title="Ver detalles">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success me-1" title="Ventas">
+                      <i class="bi bi-graph-up"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" title="Activar">
+                      <i class="bi bi-person-check"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>V005</td>
+                  <td>Roberto Silva Vargas</td>
+                  <td>roberto.silva@mambo.com</td>
+                  <td>987654325</td>
+                  <td><span class="badge bg-warning">Tarde</span></td>
+                  <td>S/ 3,120.00</td>
+                  <td><span class="badge bg-success">Activo</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-info me-1" title="Ver detalles">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success me-1" title="Ventas">
+                      <i class="bi bi-graph-up"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" title="Desactivar">
+                      <i class="bi bi-person-x"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginación -->
+          <nav aria-label="Paginación de vendedores">
+            <ul class="pagination justify-content-center mt-3">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Anterior</a>
+              </li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Siguiente</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nuevo Vendedor -->
+  <div class="modal fade" id="modalNuevoVendedor" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-person-plus me-2"></i>
+            Nuevo Vendedor
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="nombreVendedor" class="form-label">Nombre Completo *</label>
+                  <input type="text" class="form-control" id="nombreVendedor" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="dniVendedor" class="form-label">DNI *</label>
+                  <input type="text" class="form-control" id="dniVendedor" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="emailVendedor" class="form-label">Email *</label>
+                  <input type="email" class="form-control" id="emailVendedor" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="telefonoVendedor" class="form-label">Teléfono *</label>
+                  <input type="text" class="form-control" id="telefonoVendedor" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="turnoVendedor" class="form-label">Turno *</label>
+                  <select class="form-select" id="turnoVendedor" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="manana">Mañana (8:00 - 16:00)</option>
+                    <option value="tarde">Tarde (16:00 - 24:00)</option>
+                    <option value="noche">Noche (24:00 - 8:00)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="fechaIngreso" class="form-label">Fecha de Ingreso *</label>
+                  <input type="date" class="form-control" id="fechaIngreso" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mb-3">
+                  <label for="direccionVendedor" class="form-label">Dirección</label>
+                  <textarea class="form-control" id="direccionVendedor" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-dark">Guardar Vendedor</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   </main>
+    </div>
+
+    <!-- JS globales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/fechaActualHeader.js}"></script>
+    <script>
+      // Llama a la función
+      fechaActual();
+      setInterval(fechaActual, 1000);
+    </script>
+  </body>
+</html>

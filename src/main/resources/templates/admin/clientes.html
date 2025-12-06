@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Clientes</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+  <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  <link rel="stylesheet" th:href="@{/css/home.css}" />
+
+  <style>
+    .card-header .bi { font-size: 1.15rem; }
+    #tablaClientes tbody tr:hover { background: #f8f9fa; }
+    .table-empty { text-align: center; color: #6c757d; padding: 2rem 0; }
+    .badge-estado { font-size: .75rem; }
+    .modal-lg { max-width: 820px; }
+  </style>
+</head>
+
+<body>
+  <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
+
+  <div class="main-content">
+    <th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+
+    <main>
+      <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h1 class="mb-1"><i class="bi bi-people text-primary"></i> Gestión de Clientes</h1>
+            <p class="text-muted mb-0">Administra y gestiona la información de tus clientes</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" id="btnRefrescar" title="Refrescar lista" onclick="filtrarClientes()">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="limpiarFormulario()">
+              <i class="bi bi-plus-circle me-2"></i> Nuevo Cliente
+            </button>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-5">
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="text" id="buscarCliente" class="form-control" placeholder="Buscar por nombre o documento" onkeyup="filtrarClientes()" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <select id="filtroTipo" name="tipoDocumento" class="form-select" onchange="filtrarClientes()">
+              <option value="">Todos los tipos de documento</option>
+              <th:block th:each="td : ${tiposDocumento}">
+                <option th:value="${td.id}" th:text="${td.nombre}"></option>
+              </th:block>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <select id="filtroEstado" class="form-select" onchange="filtrarClientes()" title="Filtrar clientes por estado">
+              <option value="">Todos los estados</option>
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-table me-2"></i> Lista de Clientes</h5>
+            <small class="text-muted">Total: <span th:text="${clientes.size()}">0</span></small>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover align-middle" id="tablaClientes">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre/Razón Social</th>
+                  <th>Tipo Documento</th>
+                  <th>Número Documento</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${#lists.isEmpty(clientes)}">
+                  <td colspan="7" class="table-empty"><i class="bi bi-emoji-frown me-2"></i>No hay clientes aún.</td>
+                </tr>
+                <tr th:each="cliente : ${clientes}" th:data-id="${cliente.id}">
+                  <td th:text="${cliente.id}"></td>
+                  <td>
+                    <strong th:text="${cliente.nombreCompleto}"></strong>
+                    <div class="d-block text-muted small" th:if="${cliente.numeroDocumento != null}">
+                      <span class="me-2"><i class="bi bi-credit-card-2-front"></i> <span th:text="${cliente.numeroDocumento}"></span></span>
+                    </div>
+                  </td>
+                  <td><span th:text="${cliente.tipoDocumentoNombre != null ? cliente.tipoDocumentoNombre : 'Sin documento'}"></span></td>
+                  <td th:text="${cliente.numeroDocumento}"></td>
+                  <td>
+                    <a th:href="'mailto:' + ${cliente.email}" th:text="${cliente.email}" th:if="${cliente.email != null}"></a>
+                    <span th:if="${cliente.email == null}" class="text-muted">—</span>
+                  </td>
+                  <td th:text="${cliente.telefono != null ? cliente.telefono : '—'}"></td>
+                  <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                      <button class="btn btn-outline-primary" title="Editar" th:onclick="'editarCliente(' + ${cliente.id} + ')'">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <form th:action="@{'/lista/clientes/eliminar/' + ${cliente.id}}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-danger" title="Eliminar" onclick="return confirm('¿Está seguro de eliminar este cliente?');">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Cliente -->
+      <div class="modal fade" id="modalCliente" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i> Cliente</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" title="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <form th:action="@{/lista/clientes/guardar}" th:object="${cliente}" method="post" id="formCliente" novalidate>
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="selectTipoDocumento" class="form-label">Tipo de Documento *</label>
+                    <select th:field="*{tipoDocumento}" class="form-select" id="selectTipoDocumento" required>
+                      <option value="" disabled>Selecciona un tipo de documento</option>
+                      <th:block th:each="td : ${tiposDocumento}">
+                        <option th:value="${td.id}" th:text="${td.nombre}"></option>
+                      </th:block>
+                    </select>
+                  </div>
+
+                  <input type="hidden" id="clienteId" th:field="*{id}" />
+
+                  <div class="col-md-6">
+                    <label for="numeroDocumento" class="form-label">Número de Documento *</label>
+                    <input type="text" class="form-control" th:field="*{numeroDocumento}" id="numeroDocumento" placeholder="Ej: 12345678" required />
+                  </div>
+
+                  <div class="col-md-12">
+                    <label for="nombreCompleto" class="form-label">Nombre Completo/Razón Social *</label>
+                    <input type="text" class="form-control" th:field="*{nombreCompleto}" id="nombreCompleto" placeholder="Nombre o razón social" required />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="correo@dominio.com" required />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="text" class="form-control" th:field="*{telefono}" id="telefono" placeholder="+51 9XXXXXXXX" required />
+                  </div>
+
+                  <div class="col-md-6 position-relative">
+                    <label for="contra" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                      <input type="password" class="form-control" th:field="*{contra}" id="contra" placeholder="Dejar vacío usa número de documento" />
+                      <button class="btn btn-outline-secondary" type="button" id="toggleContra" title="Mostrar / ocultar contraseña">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                    <div class="form-text">Si queda vacío, se usará el número de documento como contraseña por defecto.</div>
+                  </div>
+                </div>
+
+                <div class="modal-footer mt-3">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener("click", (e) => {
+      if (e.target.closest('#toggleContra')) {
+        const input = document.getElementById('contra');
+        const btnIcon = e.target.closest('#toggleContra').querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          btnIcon.className = 'bi bi-eye-slash';
+        } else {
+          input.type = 'password';
+          btnIcon.className = 'bi bi-eye';
+        }
+      }
+    });
+
+    async function filtrarClientes() {
+      const buscar = encodeURIComponent(document.getElementById("buscarCliente").value || '');
+      const tipo = document.getElementById("filtroTipo").value || '';
+      const estado = document.getElementById("filtroEstado").value || '';
+
+      const res = await fetch(`/lista/clientes/filtrar?buscar=${buscar}&tipo=${tipo}&estado=${estado}`);
+      if (!res.ok) return console.error("Error al filtrar clientes:", res.statusText);
+
+      const clientes = await res.json();
+      const tbody = document.getElementById("tablaClientes").getElementsByTagName("tbody")[0];
+      tbody.innerHTML = "";
+
+      if (!clientes || clientes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="table-empty"><i class="bi bi-emoji-frown me-2"></i>No hay clientes que coincidan.</td></tr>`;
+        return;
+      }
+
+      clientes.forEach((c) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+              <td>${c.id}</td>
+              <td><strong>${c.nombreCompleto}</strong><div class="small text-muted">${c.numeroDocumento || ''}</div></td>
+              <td>${c.tipoDocumentoNombre || 'Sin documento'}</td>
+              <td>${c.numeroDocumento || ''}</td>
+              <td>${c.email || '—'}</td>
+              <td>${c.telefono || '—'}</td>
+              <td>
+                <div class="btn-group btn-group-sm" role="group">
+                  <button class="btn btn-outline-primary" onclick="editarCliente(${c.id})" title="Editar"><i class="bi bi-pencil"></i></button>
+                  <form action="/lista/clientes/eliminar/${c.id}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Está seguro de eliminar este cliente?');" title="Eliminar"><i class="bi bi-trash"></i></button>
+                  </form>
+                </div>
+              </td>
+            `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function editarCliente(id) {
+      const form = document.getElementById("formCliente");
+      try {
+        const res = await fetch(`/lista/clientes/obtener/${id}`);
+        if (!res.ok) { alert("Error al cargar cliente."); return; }
+        const data = await res.json();
+        document.getElementById("clienteId").value = data.id || '';
+        document.getElementById("selectTipoDocumento").value = data.tipoDocumento || '';
+        document.getElementById("numeroDocumento").value = data.numeroDocumento || '';
+        document.getElementById("nombreCompleto").value = data.nombreCompleto || '';
+        document.getElementById("email").value = data.email || '';
+        document.getElementById("telefono").value = data.telefono || '';
+        document.getElementById("contra").value = '';
+        form.action = `/lista/clientes/actualizar/${id}`;
+        const modal = new bootstrap.Modal(document.getElementById("modalCliente"));
+        modal.show();
+      } catch (error) { console.error("Error al obtener datos del cliente:", error); }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      window.limpiarFormulario = function () {
+        const form = document.getElementById("formCliente");
+        form.reset();
+        const idInput = document.getElementById("clienteId");
+        if (idInput) idInput.value = "";
+        form.action = "/lista/clientes/guardar";
+      };
+
+      const form = document.getElementById('formCliente');
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) { event.preventDefault(); event.stopPropagation(); }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  </script>
+</body>
+
+</html>

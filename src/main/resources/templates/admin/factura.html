@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--Estilos que comparten todo-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+    <!--Estilos del titulo-->
+    <title>Generar Factura - MAMBO</title>
+  </head>
+
+  <!----------------------------CONTENIDO-------------------------------------------------------------------------->
+  <body>
+    <!--Insertamos el sidebar-->
+    <th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+    <!--La parte interior de la pagina-->
+    <div class="main-content">
+      <!--Insertamos el navbar-->
+      <th:block th:replace="fragments/navbar :: navbar"></th:block>
+      <!--Contenido de la pagina-->
+      <main class="">
+        <!------------------------------------------------------------------>
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h1 class="mb-2">
+                <i class="bi bi-file-earmark-text text-info"></i>
+                Generar Factura
+              </h1>
+              <p class="text-muted">Crear nueva factura electrónica</p>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary" onclick="limpiarFormulario()">
+                <i class="bi bi-arrow-clockwise me-2"></i>Limpiar
+              </button>
+              <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalHistorialFacturas">
+                <i class="bi bi-clock-history me-2"></i>Historial
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Formulario de factura -->
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-file-earmark-plus me-2"></i>
+                Nueva Factura
+              </h5>
+            </div>
+            <div class="card-body">
+              <!-- Información de la empresa cliente -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h6 class="text-info border-bottom pb-2">Información de la Empresa Cliente</h6>
+                </div>
+                <div class="col-md-6">
+                  <label for="rucCliente" class="form-label">RUC *</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="rucCliente" placeholder="20123456789">
+                    <button type="button" class="btn btn-outline-secondary" onclick="buscarRuc() " title="Buscar RUC" aria-label="Buscar RUC">
+                      <i class="bi bi-search"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="razonSocial" class="form-label">Razón Social *</label>
+                  <input type="text" class="form-control" id="razonSocial" placeholder="Nombre de la empresa">
+                </div>
+                <div class="col-md-12 mt-2">
+                  <label for="direccionCliente" class="form-label">Dirección *</label>
+                  <input type="text" class="form-control" id="direccionCliente" placeholder="Dirección fiscal de la empresa">
+                </div>
+              </div>
+
+              <!-- Información adicional -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h6 class="text-info border-bottom pb-2">Información de la Factura</h6>
+                </div>
+                <div class="col-md-4">
+                  <label for="numeroFactura" class="form-label">Número de Factura</label>
+                  <input type="text" class="form-control" id="numeroFactura" value="F001-00001234" readonly>
+                </div>
+                <div class="col-md-4">
+                  <label for="fechaEmision" class="form-label">Fecha de Emisión</label>
+                  <input type="date" class="form-control" id="fechaEmision">
+                </div>
+                <div class="col-md-4">
+                  <label for="fechaVencimiento" class="form-label">Fecha de Vencimiento</label>
+                  <input type="date" class="form-control" id="fechaVencimiento">
+                </div>
+              </div>
+
+              <!-- Agregar productos -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h6 class="text-info border-bottom pb-2">Detalle de Productos/Servicios</h6>
+                </div>
+                <div class="col-md-3">
+                  <label for="codigoProductoF" class="form-label">Código</label>
+                  <input type="text" class="form-control" id="codigoProductoF" placeholder="Código">
+                </div>
+                <div class="col-md-4">
+                  <label for="descripcionProducto" class="form-label">Descripción</label>
+                  <input type="text" class="form-control" id="descripcionProducto" placeholder="Descripción del producto/servicio">
+                </div>
+                <div class="col-md-2">
+                  <label for="cantidadProductoF" class="form-label">Cantidad</label>
+                  <input type="number" class="form-control" id="cantidadProductoF" value="1" min="1">
+                </div>
+                <div class="col-md-2">
+                  <label for="precioProductoF" class="form-label">Precio Unit.</label>
+                  <input type="number" class="form-control" id="precioProductoF" step="0.01">
+                </div>
+                <div class="col-md-1">
+                  <label class="form-label">&nbsp;</label>
+                  <button type="button" class="btn btn-info w-100" onclick="agregarProductoFactura()"title="Agregar producto a la factura" aria-label="Agregar producto a la factura">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lista de productos de la factura -->
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table class="table table-bordered" id="tablaProductosFactura">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Código</th>
+                          <th>Descripción</th>
+                          <th>Cantidad</th>
+                          <th>Precio Unit.</th>
+                          <th>Valor Venta</th>
+                          <th>IGV</th>
+                          <th>Importe Total</th>
+                          <th>Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Los productos se agregan aquí dinámicamente -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="row mt-4">
+                <div class="col-12">
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-info" onclick="generarFactura()">
+                      <i class="bi bi-file-earmark-text me-2"></i>Generar Factura
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="enviarSunat()">
+                      <i class="bi bi-send me-2"></i>Enviar a SUNAT
+                    </button>
+                    <button type="button" class="btn btn-outline-success" onclick="descargarPDF()">
+                      <i class="bi bi-file-pdf me-2"></i>Descargar PDF
+                    </button>
+                    <button type="button" class="btn btn-outline-warning" onclick="guardarBorradorFactura()">
+                      <i class="bi bi-save me-2"></i>Guardar Borrador
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen de la factura -->
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-calculator me-2"></i>
+                Resumen de Factura
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Valor de Venta:</span>
+                <span id="valorVentaFactura">S/ 0.00</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>IGV (18%):</span>
+                <span id="igvFactura">S/ 0.00</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Descuentos:</span>
+                <span id="descuentosFactura">S/ 0.00</span>
+              </div>
+              <hr>
+              <div class="d-flex justify-content-between mb-3">
+                <strong>Importe Total:</strong>
+                <strong id="totalFactura" class="text-info">S/ 0.00</strong>
+              </div>
+              
+              <div class="mb-3">
+                <label for="condicionPago" class="form-label">Condición de Pago</label>
+                <select class="form-select" id="condicionPago">
+                  <option value="contado">Al Contado</option>
+                  <option value="credito">Al Crédito</option>
+                </select>
+              </div>
+
+              <div class="mb-3" id="campoPlazoCredito" style="display: none;">
+                <label for="plazoCredito" class="form-label">Plazo de Crédito (días)</label>
+                <input type="number" class="form-control" id="plazoCredito" value="30">
+              </div>
+
+              <div class="mb-3">
+                <label for="tipoOperacion" class="form-label">Tipo de Operación</label>
+                <select class="form-select" id="tipoOperacion">
+                  <option value="venta_interna">Venta Interna</option>
+                  <option value="exportacion">Exportación</option>
+                  <option value="no_domiciliado">No Domiciliado</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="observacionesFactura" class="form-label">Observaciones</label>
+                <textarea class="form-control" id="observacionesFactura" rows="3" placeholder="Observaciones adicionales..."></textarea>
+              </div>
+
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Nota:</strong> La factura será enviada automáticamente a SUNAT para su validación.
+              </div>
+            </div>
+          </div>
+
+          <!-- Estado SUNAT -->
+          <div class="card mt-3">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-shield-check me-2"></i>
+                Estado SUNAT
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <span class="badge bg-warning me-2">Pendiente</span>
+                <small class="text-muted">La factura aún no ha sido enviada a SUNAT</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Historial Facturas -->
+  <div class="modal fade" id="modalHistorialFacturas" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-clock-history me-2"></i>
+            Historial de Facturas
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Número</th>
+                  <th>Fecha</th>
+                  <th>Cliente</th>
+                  <th>Total</th>
+                  <th>Estado SUNAT</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>F001-00001233</td>
+                  <td>08/09/2025</td>
+                  <td>Empresa ABC S.A.C.</td>
+                  <td>S/ 1,245.60</td>
+                  <td><span class="badge bg-success">Aceptado</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" aria-label="Ver detalle">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success"aria-label="Descargar PDF">
+                      <i class="bi bi-file-pdf"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>F001-00001232</td>
+                  <td>07/09/2025</td>
+                  <td>Distribuidora XYZ E.I.R.L.</td>
+                  <td>S/ 890.30</td>
+                  <td><span class="badge bg-success">Aceptado</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" title="Ver detalle">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success"title="Descargue PDF">
+                      <i class="bi bi-file-pdf"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!------------------------------------------------------------------>
+      </main>
+    </div>
+
+    <!-- JS globales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/fechaActualHeader.js}"></script>
+  <script>
+    // Llama a la función
+      fechaActual();
+      setInterval(fechaActual, 1000);
+
+  </script>
+</body>
+</html>

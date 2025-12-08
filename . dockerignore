@@ -1,0 +1,47 @@
+# -------------------------
+# Archivos de Maven / Java
+# -------------------------
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.log
+
+# -------------------------
+# Archivos de configuración de IDEs
+# -------------------------
+.vscode/
+.idea/
+*.ipr
+*.iws
+*.iml
+
+# -------------------------
+# Archivos de sistema
+# -------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -------------------------
+# Docker
+# -------------------------
+docker-compose.override.yml
+*.env
+*.pid
+*.sock
+*.log
+
+# -------------------------
+# Spring Boot
+# -------------------------
+spring-boot-devtools.properties
+.springBeans
+
+# -------------------------
+# Otros
+# -------------------------
+*.tmp
+*.swp

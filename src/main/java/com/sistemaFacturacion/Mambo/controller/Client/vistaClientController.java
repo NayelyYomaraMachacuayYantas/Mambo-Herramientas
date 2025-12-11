@@ -8,14 +8,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/")   // BASE: todas las URLs de este controlador empiezan en "/"
 public class vistaClientController {
+
     @GetMapping
-    public String Inicio (@AuthenticationPrincipal UserDetails user, Model model) {
+    public String Inicio(@AuthenticationPrincipal UserDetails user, Model model) {
         if (user != null) {
-            model.addAttribute("nombreUsuario", user.getUsername()); // aquí podrías buscar el cliente/usuario completo
+            model.addAttribute("nombreUsuario", user.getUsername());
         }
         return "client/inicio"; 
-        // --> ubica tu archivo en: src/main/resources/templates/client/inicio.html
+        // templates/client/inicio.html
+    }
+
+    @GetMapping("/sobre-nosotros")
+    public String sobreNosotros(@AuthenticationPrincipal UserDetails user, Model model) {
+        if (user != null) {
+            model.addAttribute("nombreUsuario", user.getUsername());
+        }
+        return "client/sobre-nosotros";  // templates/client/sobre-nosotros.html
     }
 }
